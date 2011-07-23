@@ -7,9 +7,9 @@ use Digest::MD5 qw/md5/;
 my $build = Modware::Build->current;
 Chado->connect( $build->connect_hash );
 
+my ($expression, $image);
 use_ok('TestExpression');
 subtest 'Test::Chado::Expression' => sub {
-    my $expression;
     lives_ok {
         $expression = Test::Modware::Chado::Expression->create(
             checksum   => md5('exp2'),
@@ -17,7 +17,7 @@ subtest 'Test::Chado::Expression' => sub {
             uniquename => 'exp2'
         );
     }
-    'creates a new instance';
+    'creates a new expression in database';
 
     lives_ok {
         $expression->images(
@@ -68,17 +68,17 @@ subtest 'Test::Chado::Expression returns iterator in scalar context' => sub {
 };
 
 subtest 'Test::Chado::Expression' => sub {
-    my $image;
+    my $image1;
     lives_ok {
-        $image = $expression->images->add_new(
+        $image1 = $expression->images->add_new(
             type => 'gif',
             uri  => 'http://gif.com',
             data => 'gif data'
         );
     }
     'adds a new image';
-    isa_ok( $image, 'Test::Chado::Expression::Image' );
-    is( $image->new_record, 1, 'image is not yet saved in the database' );
+    isa_ok( $image1, 'Test::Chado::Expression::Image' );
+    is( $image1->new_record, 1, 'image is not yet saved in the database' );
     lives_ok { $expression->save } 'is saved with the new image';
     is( $expression->images->size, 3, 'image is saved in the database' );
 };
@@ -96,4 +96,14 @@ subtest 'Test::Chado::Expression' => sub {
     isa_ok( $image2, 'Test::Chado::Expression::Image' );
     isnt( $image2->new_record, 1, 'image is saved in the database' );
     is( $expression->images->size, 4, 'has 4 images saved in the database' );
+};
+
+subtest 'Test::Chado::Expression::Image' => sub {
+	lives_ok {
+	$image = Test::Chado::Expression::Image->create(
+		type => 'png98', 
+		uri => 'https://png98.com', 
+		data => 'png98 data'
+	)} 
+	'creates a new image';
 };

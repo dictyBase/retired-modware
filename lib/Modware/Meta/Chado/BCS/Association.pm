@@ -303,13 +303,10 @@ sub add_many_to_many {
                 if ( wantarray() ) {
                     return
                         map { $bt_class->new( dbrow => $_ ) }
-                        $self->chado->resultset( $meta->bcs_resultset )
-                        ->search_related( $hm_bcs, {}, {} )
-                        ->search_related( $bt_bcs, {}, {} );
+                        $self->dbrow->search_related( $hm_bcs, {}, {} )
+                        ->search_related( $bt_bcs,             {}, {} );
                 }
-                my $rs
-                    = $self->chado->resultset( $meta->bcs_resultset )
-                    ->search_related( $hm_bcs, {}, {} )
+                my $rs = $self->dbrow->search_related( $hm_bcs, {}, {} )
                     ->search_related( $bt_bcs, {}, {} );
                 $rel_obj = Modware::Chado::BCS::Relation::Many2Many->new(
                     collection       => $rs,
