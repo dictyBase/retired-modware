@@ -8,7 +8,7 @@ chado_map_all_attributes {
     'eimage_data' => 'data'
 };
 
-chado_has_many 'expression_images' =>
+chado_has_many 'image_exressions' =>
     ( class => 'Test::Modware::Chado::Expression::Image' );
 chado_many_to_many 'expressions' => (
     through => 'Test::Modware::Chado::ExpressionImage',
