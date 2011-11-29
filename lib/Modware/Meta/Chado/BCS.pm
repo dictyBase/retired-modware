@@ -75,6 +75,7 @@ has '_method_map' => (
 has 'bcs' => (
     is      => 'ro',
     isa     => 'Str',
+    lazy => 1, 
     default => 'Bio::Chado::Schema'
 );
 
