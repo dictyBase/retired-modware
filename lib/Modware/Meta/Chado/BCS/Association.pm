@@ -17,13 +17,11 @@ use Class::MOP;
 
 sub add_belongs_to {
     my ( $meta, $name, %options ) = @_;
-    my $bcs_source = $meta->bcs_source;
-    my $related_class = $options{class} if defined $options{class};
-
-    ## -- related class finding heuristics is still not decided
-    #if ( !$related_class ) {
-    #    $related_class = $meta->base_namespace . '::' . ucfirst( lc $name );
-    #}
+    my $bcs_source    = $meta->bcs_source;
+    my $related_class = $options{class}
+        ? $options{class}
+        ## -- related class finding heuristics
+        : $meta->base_namespace . '::' . ucfirst( lc $name );
 
     Class::MOP::load_class($related_class);
     my $related_source = $related_class->new->meta->bcs_source->source_name;
@@ -48,8 +46,7 @@ sub add_belongs_to {
         # -- set call
         if ( defined $obj ) {
             if ( $obj->new_record ) {    ## -- new related record
-                ## -- new parent object: related object will be saved by insert
-                ## -- existing parent object: related object will be saved by update
+                ## -- new related object will be saved by insert/update of parent object
                 $self->_add_belongs_to( $fk_column, $obj );
             }
             else {                       ## -- existing related record
@@ -68,7 +65,7 @@ sub add_belongs_to {
             ## -- parent object
             if ( !$self->new_record ) {
                 my $dbrow = $self->dbrow;
-                if ( defined $dbrow->$fk_column ) {
+                if ( $dbrow->$fk_column ) {
                     return $related_class->new(
                         dbrow => $dbrow->$bcs_accs->get_from_storage );
                 }
@@ -84,8 +81,7 @@ sub add_belongs_to {
         croak ref($self), " needs to be saved before creating association\n"
             if $self->new_record;
         my $obj = $related_class->new(%arg)->save;
-        $self->dbrow->$fk_column( $obj->dbrow->$fk_column );
-        $self->save;
+        $self->dbrow->$bcs_accs( $obj->dbrow );
         return $obj;
     };
 
