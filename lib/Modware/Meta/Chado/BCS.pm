@@ -14,7 +14,16 @@ use Class::MOP;
 has 'base_namespace' => (
     is      => 'rw',
     isa     => 'Str',
-    default => 'Modware'
+    lazy    => 1,
+    default => sub {
+        my ($self) = @_;
+        my $package = $self->name;
+        if ( $package =~ /::/ ) {
+            my @name = split /::/, $package;
+            return join( '::', @name[ 0 .. ( $#name - 1 ) ] );
+        }
+        return $package;
+    }
 );
 
 has 'bcs_resultset' => (
@@ -42,7 +51,6 @@ has 'pk_column' => (
     is  => 'rw',
     isa => 'Str',
 );
-
 
 has '_class_map' => (
     is      => 'rw',
@@ -75,7 +83,7 @@ has '_method_map' => (
 has 'bcs' => (
     is      => 'ro',
     isa     => 'Str',
-    lazy => 1, 
+    lazy    => 1,
     default => 'Bio::Chado::Schema'
 );
 
@@ -88,7 +96,7 @@ has '_attr_map' => (
     },
     handles => {
         '_has_mapped_attr'    => 'defined',
-        '_map_attr'    => 'set',
+        '_map_attr'           => 'set',
         '_get_mapped_attr'    => 'get',
         '_delete_mapped_attr' => 'delete'
     },
