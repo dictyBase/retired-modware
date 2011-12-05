@@ -24,7 +24,7 @@ has 'datasource' => (
 
 has 'chado' => (
     is         => 'rw',
-    isa        => 'Bio::Chado::Schema',
+    isa        => 'DBIx::Class::Schema',
     lazy_build => 1
 );
 
