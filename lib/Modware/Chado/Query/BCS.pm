@@ -120,7 +120,7 @@ class_has 'related_query' => (
 
 class_has 'chado' => (
     is         => 'ro',
-    isa        => 'Bio::Chado::Schema',
+    isa        => 'DBIx::Class::Schema',
     lazy_build => 1
 );
 
