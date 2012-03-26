@@ -206,7 +206,7 @@ use Try::Tiny;
 
     with 'Modware::Role::Chado::Helper::BCS::WithDataStash' =>
         { create_stash_for =>
-            [qw/cvterm_dbxrefs cvtermsynonyms cvtermprop_cvterms/] };
+            [qw/cvterm_dbxrefs cvtermsynonyms cvtermprops/] };
 
     has 'helper' => (
         is      => 'rw',
@@ -543,7 +543,7 @@ use Try::Tiny;
         my ($self) = @_;
         my $node = $self->node;
         return if !$node->comment;
-        $self->add_to_insert_cvtermprop_cvterms(
+        $self->add_to_insert_cvtermprops(
             {   value   => $node->comment,
                 type_id => $self->helper->find_or_create_cvterm_id(
                     db     => 'internal',
@@ -559,7 +559,7 @@ use Try::Tiny;
         my ( $self, $prop, $value ) = @_;
         my $node = $self->node;
         return if !$node->$prop;
-        $self->add_to_insert_cvtermprop_cvterms(
+        $self->add_to_insert_cvtermprops(
             {   value => $value ? $node->$prop : 1,
                 type_id => $self->helper->find_or_create_cvterm_id(
                     db     => 'internal',
@@ -668,21 +668,21 @@ use Try::Tiny;
                 size        => 1024
             }
         );
-        $class_name->add_column(
-            'synonym_' => {
-                data_type   => 'varchar',
-                is_nullable => 0,
-                size        => 1024
-            }
-        );
-        $class_name->register_column(
-            'synonym_' => {
-                data_type   => 'varchar',
-                is_nullable => 0,
-                size        => 1024
-            }
-        );
-
+#        $class_name->add_column(
+#            'synonym_' => {
+#                data_type   => 'varchar',
+#                is_nullable => 0,
+#                size        => 1024
+#            }
+#        );
+#        $class_name->register_column(
+#            'synonym_' => {
+#                data_type   => 'varchar',
+#                is_nullable => 0,
+#                size        => 1024
+#            }
+#        );
+#
     }
 
     package OntoEngine::Postgresql;

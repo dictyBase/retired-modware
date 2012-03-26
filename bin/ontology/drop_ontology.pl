@@ -104,7 +104,7 @@ $schema->txn_do(
 
         if ($no_cascade) {
             $cvterm_rs->search_related( 'cvterm_dbxrefs', {} )->delete_all;
-            $cvterm_rs->search_related( 'cvtermprop_cvterms', {} )
+            $cvterm_rs->search_related( 'cvtermprops', {} )
                 ->delete_all;
             $cvterm_rs->search_related( 'cvterm_relationship_subjects', {} )
                 ->delete_all;
