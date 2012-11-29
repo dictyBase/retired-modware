@@ -25,7 +25,7 @@ GetOptions( 'h|help' => sub { pod2usage(1); } );
 my $views = do {
     my $names;
     my $view_file
-        = Path::Class::Dir->new(getcwd)->parent->parent->subdir('data')
+        = Path::Class::Dir->new(getcwd)->subdir('data')
         ->file('chado_views.txt')->openr;
     while ( my $line = $view_file->getline ) {
         chomp $line;
